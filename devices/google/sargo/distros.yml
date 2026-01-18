@@ -1,1 +1,32 @@
+available_distros:
+  - name: "postmarketOS"
+    id: "pmos"
+    architectures: ["arm64"]
+    releases:
+      - version: "v23.12"
+        channel: "stable"
+        image_url: "https://images.postmarketos.org/bmain/google-sargo/"
+    instructions: "Requires partition resize after first boot."
 
+  - name: "Ubuntu Touch"
+    id: "ubports"
+    maintainer: "UBports Community"
+    releases:
+      - version: "Focal"
+        channel: "stable"
+        image_url: "https://system-image.ubports.com/"
+    instructions: "Wipe userdata partition recommended."
+
+  - name: "Mobian"
+    id: "mobian"
+    state: "testing"
+    releases:
+      - version: "bookworm"
+        image_url: "https://images.mobian-project.org/sargo/"
+
+  - name: "Droidian"
+    id: "droidian"
+    state: "alpha"
+    releases:
+      - version: "nightly"
+        image_url: "https://github.com/droidian/releases/"
