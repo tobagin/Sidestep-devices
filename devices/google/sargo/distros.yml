@@ -1,12 +1,35 @@
 available_distros:
-  - name: "postmarketOS"
-    id: "pmos"
-    architectures: ["arm64"]
-    releases:
-      - version: "v23.12"
-        channel: "stable"
-        image_url: "https://images.postmarketos.org/bmain/google-sargo/"
-    instructions: "Requires partition resize after first boot."
+  - id: "postmarketos"
+    name: "postmarketOS"
+    developer: "pmOS Team"
+    website: "https://postmarketos.org"
+    
+    # Allows the UI to create a sub-selection menu
+    channels:
+      - name: "v25.12 (Stable)"
+        id: "v25.12"
+        base_url: "https://images.postmarketos.org/bpo/v25.12/google-sargo/"
+      - name: "Edge (Rolling)"
+        id: "edge"
+        base_url: "https://images.postmarketos.org/bpo/edge/google-sargo/"
+
+    # Interface options available for this device
+    interfaces:
+      - id: "gnome-mobile"
+        name: "GNOME Mobile"
+        description: "Adaptive GNOME experience for touchscreens."
+      - id: "phosh"
+        name: "Phosh"
+        description: "Wayland shell based on GNOME, built by Purism."
+      - id: "plasma-mobile"
+        name: "KDE Plasma Mobile"
+        description: "Powerful, customizable desktop-class mobile shell."
+      - id: "sxmo-de-sway"
+        name: "Sxmo (Sway)"
+        description: "Simple X Mobile; a minimal, gesture-driven tiling interface."
+
+    # Logic for image construction: {base_url}/{date}-{time}-postmarketOS-{channel}-{version}-{interface}-{device}.img.xz
+    image_pattern: "{base_url}/*-postmarketOS-{id}-{interface}-{device}.img.xz"
 
   - name: "Ubuntu Touch"
     id: "ubports"
