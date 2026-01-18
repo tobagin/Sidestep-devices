@@ -1,13 +1,13 @@
 device_codename: "sargo"
-last_updated: 2026-01-18
+last_updated: "2026-01-18"
 
 available_distros:
+  # --- postmarketOS ---
   - id: "postmarketos"
     name: "postmarketOS"
     developer: "pmOS Team"
-    website: "https://postmarketos.org"
     discovery_strategy: "pmos_html_scrape"
-    # Logic: Scrape base_url/{interface}, find latest date folder, then find .img.xz
+    # Root of the image server for the specific hardware
     base_url: "https://images.postmarketos.org/bpo/{channel}/{device}/"
     channels:
       - id: "v25.12"
@@ -23,39 +23,54 @@ available_distros:
         label: "Plasma Mobile"
       - id: "sxmo-de-sway"
         label: "Sxmo (Sway)"
-    flash_method: "direct_fastboot_image"
+    # Scraper logic: Look for the most recent file matching this pattern
+    image_pattern: "*-postmarketOS-{channel}-{interface}-*-{device}.img.xz"
+    flash_method: "direct_fastboot"
 
+  # --- UBports (Ubuntu Touch) ---
   - id: "ubports"
     name: "Ubuntu Touch"
     developer: "UBports Foundation"
     discovery_strategy: "ubports_json_v1"
-    # Logic: Pull index.json from path, download 'system' and 'boot' entries
+    # UBports uses a specialized system-image server structure
     api_root: "https://system-image.ubports.com/"
     channels:
       - id: "stable"
         path: "20.04/arm64/android9plus/stable/sargo/"
+        label: "20.04 Focal (Stable)"
       - id: "devel"
         path: "20.04/arm64/android9plus/devel/sargo/"
-    flash_method: "ubports_standard"
+        label: "20.04 Focal (Development)"
+    # UBports requires specific firmware check
+    firmware_requirement: "PQ3B.190801.002"
+    flash_method: "ubports_recovery_flash"
 
+  # --- Mobian ---
   - id: "mobian"
     name: "Mobian"
     developer: "Mobian Project"
     discovery_strategy: "mobian_html_scrape"
-    # Logic: Scrape base_url, find latest 'mobian-qcom-{interface}-{date}.tar.xz'
+    # Mobian organizes by architecture/SoC family
     base_url: "https://images.mobian.org/qcom/weekly/"
     interfaces:
       - id: "phosh"
         label: "Phosh"
       - id: "plasma-mobile"
         label: "Plasma Mobile"
-    flash_method: "soc_generic_fastboot"
+    # Scraper logic: Find latest tarball for the SoC family and interface
+    image_pattern: "mobian-qcom-{interface}-.*\\.tar\\.xz"
+    flash_method: "fastboot_sparse_image"
 
+  # --- Droidian ---
   - id: "droidian"
     name: "Droidian"
     developer: "Droidian Team"
-    discovery_strategy: "direct_static"
+    discovery_strategy: "github_release_latest"
+    # Droidian images are usually released as fastboot-ready zips on GitHub
     channels:
       - id: "nightly"
-        image_url: "https://images.droidian.org/droidian/nightly/arm64/google/image-fastboot-sargo.zip"
+        label: "Nightly"
+        # The specific artifact name for sargo API 28 (Android 9 base)
+        artifact_match: "droidian-OFFICIAL-phosh-phone-google_sargo-api28-arm64-nightly.zip"
+        release_url: "https://api.github.com/repos/droidian-images/droidian/releases/latest"
     flash_method: "fastboot_zip_orchestrator"
