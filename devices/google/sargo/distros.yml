@@ -1,55 +1,61 @@
+device_codename: "sargo"
+last_updated: 2026-01-18
+
 available_distros:
   - id: "postmarketos"
     name: "postmarketOS"
     developer: "pmOS Team"
     website: "https://postmarketos.org"
-    
-    # Allows the UI to create a sub-selection menu
+    discovery_strategy: "pmos_html_scrape"
+    # Logic: Scrape base_url/{interface}, find latest date folder, then find .img.xz
+    base_url: "https://images.postmarketos.org/bpo/{channel}/{device}/"
     channels:
-      - name: "v25.12 (Stable)"
-        id: "v25.12"
-        base_url: "https://images.postmarketos.org/bpo/v25.12/google-sargo/"
-      - name: "Edge (Rolling)"
-        id: "edge"
-        base_url: "https://images.postmarketos.org/bpo/edge/google-sargo/"
-
-    # Interface options available for this device
+      - id: "v25.12"
+        label: "v25.12 (Stable)"
+      - id: "edge"
+        label: "Edge (Rolling)"
     interfaces:
       - id: "gnome-mobile"
-        name: "GNOME Mobile"
-        description: "Adaptive GNOME experience for touchscreens."
+        label: "GNOME Mobile"
       - id: "phosh"
-        name: "Phosh"
-        description: "Wayland shell based on GNOME, built by Purism."
+        label: "Phosh"
       - id: "plasma-mobile"
-        name: "KDE Plasma Mobile"
-        description: "Powerful, customizable desktop-class mobile shell."
+        label: "Plasma Mobile"
       - id: "sxmo-de-sway"
-        name: "Sxmo (Sway)"
-        description: "Simple X Mobile; a minimal, gesture-driven tiling interface."
+        label: "Sxmo (Sway)"
+    flash_method: "direct_fastboot_image"
 
-    # Logic for image construction: {base_url}/{date}-{time}-postmarketOS-{channel}-{version}-{interface}-{device}.img.xz
-    image_pattern: "{base_url}/*-postmarketOS-{id}-{interface}-{device}.img.xz"
+  - id: "ubports"
+    name: "Ubuntu Touch"
+    developer: "UBports Foundation"
+    discovery_strategy: "ubports_json_v1"
+    # Logic: Pull index.json from path, download 'system' and 'boot' entries
+    api_root: "https://system-image.ubports.com/"
+    channels:
+      - id: "stable"
+        path: "20.04/arm64/android9plus/stable/sargo/"
+      - id: "devel"
+        path: "20.04/arm64/android9plus/devel/sargo/"
+    flash_method: "ubports_standard"
 
-  - name: "Ubuntu Touch"
-    id: "ubports"
-    maintainer: "UBports Community"
-    releases:
-      - version: "Focal"
-        channel: "stable"
-        image_url: "https://system-image.ubports.com/"
-    instructions: "Wipe userdata partition recommended."
+  - id: "mobian"
+    name: "Mobian"
+    developer: "Mobian Project"
+    discovery_strategy: "mobian_html_scrape"
+    # Logic: Scrape base_url, find latest 'mobian-qcom-{interface}-{date}.tar.xz'
+    base_url: "https://images.mobian.org/qcom/weekly/"
+    interfaces:
+      - id: "phosh"
+        label: "Phosh"
+      - id: "plasma-mobile"
+        label: "Plasma Mobile"
+    flash_method: "soc_generic_fastboot"
 
-  - name: "Mobian"
-    id: "mobian"
-    state: "testing"
-    releases:
-      - version: "bookworm"
-        image_url: "https://images.mobian-project.org/sargo/"
-
-  - name: "Droidian"
-    id: "droidian"
-    state: "alpha"
-    releases:
-      - version: "nightly"
-        image_url: "https://github.com/droidian/releases/"
+  - id: "droidian"
+    name: "Droidian"
+    developer: "Droidian Team"
+    discovery_strategy: "direct_static"
+    channels:
+      - id: "nightly"
+        image_url: "https://images.droidian.org/droidian/nightly/arm64/google/image-fastboot-sargo.zip"
+    flash_method: "fastboot_zip_orchestrator"
