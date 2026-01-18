@@ -1,1 +1,37 @@
+device_codename: "sargo"
+last_validated: 2024-05-20
 
+# Critical warnings that block the UI until acknowledged
+critical_warnings:
+  - id: "data_loss"
+    level: "danger"
+    text: "Installing Linux will completely wipe your Android data. Ensure you have a backup of your photos and contacts."
+  - id: "firmware_version"
+    level: "warning"
+    text: "This device must be running Android 9.0 (PQ3B) or Android 11.0 firmware before flashing. Newer or older firmware may cause bootloops."
+
+# Hardware-specific quirks for the UI to display in an 'Info' section
+hardware_quirks:
+  - component: "Display"
+    status: "partial"
+    note: "Automatic brightness may be jittery on some AMOLED panels; manual control is recommended."
+  - component: "Audio"
+    status: "working"
+    note: "Stereo speakers are supported, but the bottom speaker is significantly louder by design."
+  - component: "Camera"
+    status: "experimental"
+    note: "Post-processing (HDR) is currently unavailable in Megapixels; images may appear dark."
+
+# Technical flags for the Rust flashing engine
+provisioning_flags:
+  partition_layout: "slot_ab" # Tells the app to check for /dev/block/boot_a and boot_b
+  uses_vbmeta: true           # App must run 'fastboot --disable-verity flash vbmeta'
+  custom_recovery_req: false  # Can flash directly via fastboot
+  recommended_filesystem: "ext4"
+
+# External resources for deep troubleshooting
+external_links:
+  - label: "XDA Development Thread"
+    url: "https://forum.xda-developers.com/f/google-pixel-3a-roms-kernels-recoveries-othe.8726/"
+  - label: "postmarketOS Wiki"
+    url: "https://wiki.postmarketos.org/wiki/Google_Pixel_3a_(google-sargo)"
